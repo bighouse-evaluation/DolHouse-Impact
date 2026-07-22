@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A DoL House — Impact Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#000000; --white:#ffffff;
+    --pink:#E6007E; --teal:#68E2D4;
+    --yellow:#F3D245; --blue:#42AEF0;
+    --navy:#2050A8;
+    --panel:#0d0d0d; --panel2:#141414; --line:#2a2a2a;
+    --grey:#9a9a9a;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--black); color:var(--white);
+    font-family:'Lato',sans-serif; font-weight:400;
+    line-height:1.5;
+  }
+  h1,h2,h3,.display{ font-family:'Bebas Neue',sans-serif; letter-spacing:0.02em; }
+  a{ color:var(--teal); }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative; padding:90px 6vw 60px; overflow:hidden;
+    border-bottom:4px solid var(--pink);
+  }
+  .hero::before{
+    content:""; position:absolute; top:-120px; right:-120px; width:420px; height:420px;
+    border:3px solid var(--teal); border-radius:50%; opacity:0.35;
+  }
+  .hero::after{
+    content:""; position:absolute; bottom:-160px; left:-80px; width:320px; height:320px;
+    border:3px solid var(--pink); border-radius:50%; opacity:0.25;
+  }
+  .eyebrow{
+    display:inline-block; font-family:'Bebas Neue',sans-serif; font-size:15px;
+    letter-spacing:0.3em; color:var(--yellow); border:1px solid var(--yellow);
+    padding:5px 14px; border-radius:999px; margin-bottom:22px; text-transform:uppercase;
+  }
+  .hero h1{ font-size:clamp(52px,9vw,120px); line-height:0.92; position:relative; z-index:1;}
+  .hero h1 span{ color:var(--pink); }
+  .hero .subtitle{ font-size:clamp(18px,2.4vw,26px); color:var(--teal); font-family:'Bebas Neue',sans-serif; letter-spacing:0.04em; margin-top:6px;}
+  .hero .meta-row{ margin-top:26px; display:flex; gap:28px; flex-wrap:wrap; color:var(--grey); font-size:14px;}
+  .hero .meta-row b{ color:var(--white); }
+  .hero .note{
+    margin-top:30px; max-width:640px; font-size:14px; color:var(--grey);
+    border-left:3px solid var(--blue); padding-left:16px;
+  }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky; top:0; z-index:50; background:rgba(0,0,0,0.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line); display:flex; gap:2px; overflow-x:auto;
+    padding:0 6vw;
+  }
+  nav a{
+    font-family:'Bebas Neue',sans-serif; letter-spacing:0.08em; font-size:15px;
+    color:var(--grey); text-decoration:none; padding:16px 18px; white-space:nowrap; border-bottom:3px solid transparent;
+  }
+  nav a:hover{ color:var(--white); border-bottom-color:var(--teal); }
+
+  section{ padding:70px 6vw; border-bottom:1px solid var(--line); }
+  .section-head{ display:flex; align-items:baseline; gap:16px; margin-bottom:36px; flex-wrap:wrap;}
+  .section-head .num{ font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--pink); }
+  .section-head h2{ font-size:clamp(32px,5vw,54px); }
+  .section-sub{ color:var(--grey); max-width:680px; margin-top:-20px; margin-bottom:36px; font-size:15px;}
+
+  /* ---------- HEADLINE STRIP ---------- */
+  .headline-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line);}
+  .headline-card{ background:var(--panel); padding:28px 22px; }
+  .headline-card .value{ font-family:'Bebas Neue',sans-serif; font-size:56px; color:var(--yellow); line-height:1;}
+  .headline-card .label{ margin-top:8px; font-weight:700; font-size:14px;}
+  .headline-card .sub{ margin-top:4px; font-size:12px; color:var(--grey);}
+
+  /* ---------- CHARTS ---------- */
+  .chart-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px;}
+  .chart-card{ background:var(--panel); border:1px solid var(--line); padding:26px; border-radius:4px; }
+  .chart-card h3{ font-size:22px; margin-bottom:18px; color:var(--teal); }
+  .bar-row{ display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:13px;}
+  .bar-label{ width:150px; flex-shrink:0; color:var(--grey);}
+  .bar-track{ flex:1; background:#1c1c1c; height:16px; border-radius:3px; overflow:hidden;}
+  .bar-fill{ height:100%; background:var(--pink); }
+  .bar-val{ width:38px; text-align:right; font-weight:700; flex-shrink:0;}
+
+  .pie-wrap{ display:flex; align-items:center; gap:22px; flex-wrap:wrap;}
+  .pie-legend{ font-size:13px; }
+  .pie-legend div{ display:flex; align-items:center; gap:8px; margin-bottom:6px; color:var(--grey);}
+  .pie-legend .swatch{ width:11px; height:11px; border-radius:2px; flex-shrink:0;}
+  .pie-legend b{ color:var(--white);}
+
+  /* ---------- QUOTES ---------- */
+  .quote-tabs{ display:flex; gap:10px; margin-bottom:28px; flex-wrap:wrap;}
+  .quote-tab{
+    font-family:'Bebas Neue',sans-serif; letter-spacing:0.05em; font-size:14px;
+    background:transparent; border:1px solid var(--line); color:var(--grey);
+    padding:9px 18px; border-radius:999px; cursor:pointer;
+  }
+  .quote-tab.active{ background:var(--pink); border-color:var(--pink); color:var(--white);}
+  .quote-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px;}
+  .quote-card{
+    background:var(--panel); border-left:3px solid var(--pink); padding:24px; border-radius:2px;
+  }
+  .quote-card p{ font-size:16px; font-style:italic; margin-bottom:16px; }
+  .quote-card .attr{ font-size:13px; color:var(--teal); font-weight:700;}
+  .quote-card .attr span{ color:var(--grey); font-weight:400; display:block; font-style:normal; margin-top:2px;}
+  .quote-card .src{ margin-top:10px; font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:#666;}
+  .hidden{ display:none !important; }
+
+  /* ---------- SYSTEMS CHANGE ---------- */
+  .org-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px;}
+  .org-card{ background:var(--panel2); border:1px solid var(--line); padding:18px 20px; border-radius:4px;}
+  .org-card .org-name{ font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--yellow);}
+  .org-card p{ font-size:13px; color:var(--grey); margin-top:8px;}
+  .press-strip{ display:flex; gap:16px; flex-wrap:wrap; margin-top:30px;}
+  .press-chip{ background:var(--navy); padding:10px 18px; border-radius:999px; font-size:13px;}
+  .press-chip b{ font-family:'Bebas Neue',sans-serif; letter-spacing:0.03em;}
+
+  /* ---------- YOUNG PEOPLE ---------- */
+  .yp-stats{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-bottom:36px;}
+  .yp-stat{ background:var(--panel); border:1px solid var(--teal); border-radius:4px; padding:20px;}
+  .yp-stat .frac{ font-family:'Bebas Neue',sans-serif; font-size:40px; color:var(--teal);}
+  .yp-stat .desc{ font-size:13px; color:var(--grey); margin-top:6px;}
+  .yp-card{ background:var(--panel2); border:1px solid var(--line); border-radius:4px; padding:20px; margin-bottom:14px;}
+  .yp-card .name{ font-weight:900; color:var(--pink);}
+  .yp-card .tag{ font-size:12px; color:var(--grey); margin-bottom:10px;}
+  .yp-card p{ font-size:14px; margin-bottom:8px;}
+  .yp-badges{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
+  .badge{ font-size:11px; background:#1c1c1c; padding:4px 10px; border-radius:999px; color:var(--teal);}
+  .named-list{ margin-top:26px; font-size:14px; color:var(--grey);}
+  .named-list b{ color:var(--white);}
+
+  /* ---------- LINKEDIN GALLERY ---------- */
+  .li-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:22px;}
+  .li-card{ background:var(--panel2); border:1px solid var(--line); border-radius:6px; overflow:hidden;}
+  .li-card img{ width:100%; display:block; aspect-ratio:4/3; object-fit:cover; object-position:top; background:#1a1a1a;}
+  .li-body{ padding:14px 16px;}
+  .li-body .name{ font-weight:900; font-size:15px;}
+  .li-body .role{ font-size:12px; color:var(--grey); margin-top:2px;}
+  .li-body .q{ font-size:12px; font-style:italic; color:var(--teal); margin-top:8px;}
+
+  /* ---------- EVIDENCE STREAMS TABLE ---------- */
+  table{ width:100%; border-collapse:collapse; font-size:14px;}
+  th{ text-align:left; font-family:'Bebas Neue',sans-serif; letter-spacing:0.04em; font-size:14px; color:var(--yellow); padding:10px 12px; border-bottom:2px solid var(--line);}
+  td{ padding:12px; border-bottom:1px solid var(--line); vertical-align:top;}
+  tr:hover td{ background:#0f0f0f; }
+
+  /* ---------- GAPS ---------- */
+  .gaps-box{ background:#160b10; border:1px solid var(--pink); border-radius:6px; padding:30px 34px;}
+  .gaps-box ul{ margin-top:14px; padding-left:20px;}
+  .gaps-box li{ font-size:14px; color:#e8c9d6; margin-bottom:10px;}
+
+  footer{ padding:40px 6vw; text-align:center; color:var(--grey); font-size:12px;}
+
+  @media (max-width:640px){
+    section{ padding:50px 5vw;}
+    .hero{ padding:60px 5vw 40px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">The Big House · Impact Evidence</div>
+  <h1>A DOL<br><span>HOUSE.</span></h1>
+  <div class="subtitle">Impact &amp; Evidence Dashboard</div>
+  <div class="meta-row">
+    <div>📅 <b id="runDates"></b></div>
+    <div>🔄 Last updated <b id="lastUpdated"></b></div>
+  </div>
+  <p class="note" id="metaNote"></p>
+</header>
+
+<nav>
+  <a href="#headline">Headline</a>
+  <a href="#audience">Audience &amp; Reach</a>
+  <a href="#systems">Systems Change</a>
+  <a href="#youngpeople">Young People</a>
+  <a href="#voices">Voices</a>
+  <a href="#linkedin">LinkedIn</a>
+  <a href="#gaps">Data Gaps</a>
+</nav>
+
+<section id="headline">
+  <div class="section-head"><span class="num">01</span><h2>The Show, In Numbers</h2></div>
+  <div class="headline-grid" id="headlineGrid"></div>
+</section>
+
+<section id="audience">
+  <div class="section-head"><span class="num">02</span><h2>Audience &amp; Reach</h2></div>
+  <p class="section-sub">Who came, how they heard about it, and why. Drawn from 347 TicketSource bookings — age and sector fields weren't captured for every booking, so percentages below are of those who answered.</p>
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Professional field</h3>
+      <div id="pieEmployment" class="pie-wrap"></div>
+    </div>
+    <div class="chart-card">
+      <h3>Age</h3>
+      <div id="barAges"></div>
+    </div>
+    <div class="chart-card">
+      <h3>How they heard about it</h3>
+      <div id="barHeard"></div>
+    </div>
+    <div class="chart-card">
+      <h3>Why they came</h3>
+      <div id="barWhy"></div>
+    </div>
+  </div>
+</section>
+
+<section id="systems">
+  <div class="section-head"><span class="num">03</span><h2>Wider Systems Change</h2></div>
+  <p class="section-sub">Decision-makers, sector organisations and legal professionals who were in the room, and what's followed from their involvement.</p>
+  <div class="org-grid" id="orgGrid"></div>
+  <div class="press-strip" id="pressStrip"></div>
+</section>
+
+<section id="youngpeople">
+  <div class="section-head"><span class="num">04</span><h2>Impact on Young People</h2></div>
+  <p class="section-sub">From Beth's young people's survey (5 responses so far) — small numbers, so read as signal rather than statistically robust.</p>
+  <div class="yp-stats" id="ypStats"></div>
+  <div id="ypCards"></div>
+  <div class="named-list" id="ypNamed"></div>
+</section>
+
+<section id="voices">
+  <div class="section-head"><span class="num">05</span><h2>Voices</h2></div>
+  <p class="section-sub">The most powerful lines from professionals, audiences and young people, in their own words.</p>
+  <div class="quote-tabs">
+    <button class="quote-tab active" data-tab="systems">Systems change</button>
+    <button class="quote-tab" data-tab="audience">General audience</button>
+    <button class="quote-tab" data-tab="youngPeople">Young people</button>
+  </div>
+  <div class="quote-grid" id="quoteGrid"></div>
+</section>
+
+<section id="linkedin">
+  <div class="section-head"><span class="num">06</span><h2>LinkedIn Gallery</h2></div>
+  <p class="section-sub" id="liSub"></p>
+  <div class="li-grid" id="liGrid"></div>
+</section>
+
+<section id="streams">
+  <div class="section-head"><span class="num">07</span><h2>Evidence Streams</h2></div>
+  <table>
+    <thead><tr><th>Stream</th><th>Status</th><th>Volume so far</th></tr></thead>
+    <tbody id="streamsBody"></tbody>
+  </table>
+</section>
+
+<section id="gaps">
+  <div class="section-head"><span class="num">08</span><h2>Data Gaps &amp; Next Steps</h2></div>
+  <div class="gaps-box">
+    <p style="font-size:14px;color:#e8c9d6;">Flagged so nothing here is mistaken for a finished picture. To close before this goes to funders or partners:</p>
+    <ul id="gapsList"></ul>
+  </div>
+</section>
+
+<footer>The Big House · A DoL House Impact Dashboard · Built from the team's live evidence base, per the M&amp;E plan</footer>
+
+<script src="data.js"></script>
+<script>
+const D = DASHBOARD_DATA;
+const PALETTE = ['#E6007E','#68E2D4','#F3D245','#42AEF0','#2050A8','#ff6f61','#9b8cff','#5ad1a8'];
+
+document.getElementById('runDates').textContent = D.meta.runDates;
+document.getElementById('lastUpdated').textContent = D.meta.lastUpdated;
+document.getElementById('metaNote').textContent = D.meta.note;
+
+// Headline
+const hg = document.getElementById('headlineGrid');
+D.headline.forEach(h=>{
+  hg.innerHTML += `<div class="headline-card"><div class="value">${h.value}</div><div class="label">${h.label}</div><div class="sub">${h.sub}</div></div>`;
+});
+
+// Bar chart helper
+function renderBars(containerId, obj, colorFn){
+  const el = document.getElementById(containerId);
+  const max = Math.max(...Object.values(obj));
+  let html = '';
+  Object.entries(obj).sort((a,b)=>b[1]-a[1]).forEach(([k,v],i)=>{
+    const pct = (v/max*100).toFixed(0);
+    html += `<div class="bar-row">
+      <div class="bar-label">${k}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%; background:${colorFn(i)}"></div></div>
+      <div class="bar-val">${v}</div>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+renderBars('barAges', D.audience.ages, i=>PALETTE[i%PALETTE.length]);
+renderBars('barHeard', D.audience.heard, ()=>'var(--teal)');
+renderBars('barWhy', D.audience.why, ()=>'var(--blue)');
+
+// Pie (conic-gradient) for employment
+function renderPie(containerId, obj){
+  const el = document.getElementById(containerId);
+  const total = Object.values(obj).reduce((a,b)=>a+b,0);
+  let acc = 0;
+  let gradient = [];
+  let legend = '';
+  Object.entries(obj).sort((a,b)=>b[1]-a[1]).forEach(([k,v],i)=>{
+    const start = acc/total*360;
+    acc += v;
+    const end = acc/total*360;
+    const color = PALETTE[i%PALETTE.length];
+    gradient.push(`${color} ${start}deg ${end}deg`);
+    const pct = (v/total*100).toFixed(0);
+    legend += `<div><span class="swatch" style="background:${color}"></span><b>${k}</b>&nbsp;— ${v} (${pct}%)</div>`;
+  });
+  el.innerHTML = `
+    <div style="width:150px;height:150px;border-radius:50%;background:conic-gradient(${gradient.join(',')}); flex-shrink:0;"></div>
+    <div class="pie-legend">${legend}<div style="margin-top:8px;color:#666;">of ${D.audience.employmentResponded} who gave a field</div></div>
+  `;
+}
+renderPie('pieEmployment', D.audience.employment);
+
+// Systems change orgs
+const orgGrid = document.getElementById('orgGrid');
+D.systemsChange.orgs.forEach(o=>{
+  orgGrid.innerHTML += `<div class="org-card"><div class="org-name">${o.name}</div><p>${o.note}</p></div>`;
+});
+const pressStrip = document.getElementById('pressStrip');
+D.systemsChange.coverage.forEach(c=>{
+  pressStrip.innerHTML += `<div class="press-chip"><b>${c.outlet}</b> — ${c.note}</div>`;
+});
+
+// Young people
+const ypStats = document.getElementById('ypStats');
+D.youngPeople.stats.forEach(s=>{
+  ypStats.innerHTML += `<div class="yp-stat"><div class="frac">${s.value}</div><div class="desc">${s.metric}</div></div>`;
+});
+const ypCards = document.getElementById('ypCards');
+D.youngPeople.responses.forEach(r=>{
+  ypCards.innerHTML += `<div class="yp-card">
+    <div class="name">${r.name}</div>
+    <div class="tag">${r.tag}</div>
+    <p>"${r.stood_out}"</p>
+    <div class="yp-badges"><span class="badge">Understood rights: ${r.rights}</span><span class="badge">Confidence to speak up: ${r.confidence}</span></div>
+  </div>`;
+});
+document.getElementById('ypNamed').innerHTML = `<b>${D.youngPeople.additionalNamedAttendees} further TBH members</b> logged as attending across performances: ${D.youngPeople.namedMembers.join(', ')}.`;
+
+// Quotes tabs
+const quoteGrid = document.getElementById('quoteGrid');
+function renderQuotes(tab){
+  quoteGrid.innerHTML = D.quotes[tab].map(q=>`
+    <div class="quote-card">
+      <p>"${q.text}"</p>
+      <div class="attr">${q.name}<span>${q.role}</span></div>
+      <div class="src">${q.source}</div>
+    </div>`).join('');
+}
+renderQuotes('systems');
+document.querySelectorAll('.quote-tab').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.quote-tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderQuotes(btn.dataset.tab);
+  });
+});
+
+// LinkedIn gallery
+document.getElementById('liSub').textContent = `${D.linkedin.totalPosts} posts identified across LinkedIn, ${D.linkedin.screenshotsSaved} saved as screenshots below.`;
+const liGrid = document.getElementById('liGrid');
+D.linkedin.posts.forEach(p=>{
+  liGrid.innerHTML += `<div class="li-card">
+    <img src="${p.image}" alt="${p.name} LinkedIn post" loading="lazy">
+    <div class="li-body">
+      <div class="name">${p.name}</div>
+      <div class="role">${p.role}${p.org ? ' · '+p.org : ''}</div>
+      ${p.quote ? `<div class="q">"${p.quote}"</div>` : ''}
+    </div>
+  </div>`;
+});
+
+// Evidence streams
+const streamsBody = document.getElementById('streamsBody');
+D.evidenceStreams.forEach(s=>{
+  streamsBody.innerHTML += `<tr><td><b>${s.stream}</b></td><td>${s.status}</td><td>${s.volume}</td></tr>`;
+});
+
+// Gaps
+const gapsList = document.getElementById('gapsList');
+D.gaps.forEach(g=>{ gapsList.innerHTML += `<li>${g}</li>`; });
+</script>
+</body>
+</html>
