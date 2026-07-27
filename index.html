@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A DoL House — Impact Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
   :root{
     --black:#000000; --white:#ffffff;
@@ -18,15 +18,17 @@
   *{box-sizing:border-box; margin:0; padding:0;}
   body{
     background:var(--black); color:var(--white);
-    font-family:'Lato',sans-serif; font-weight:400;
-    line-height:1.5;
+    font-family:Georgia,'Times New Roman',serif; font-weight:400;
+    line-height:1.6;
   }
-  h1,h2,h3,.display{ font-family:'Bebas Neue',sans-serif; letter-spacing:0.02em; }
+  h1,h2,h3,.display,nav a,.quote-tab,.section-head .num,
+  .headline-card .value,.org-card .org-name,.yp-stat .frac,
+  th{ font-family:'Bebas Neue',sans-serif; letter-spacing:0.02em; }
   a{ color:var(--teal); }
 
   /* ---------- HERO ---------- */
   .hero{
-    position:relative; padding:90px 6vw 60px; overflow:hidden;
+    position:relative; padding:70px 6vw 50px; overflow:hidden;
     border-bottom:4px solid var(--pink);
   }
   .hero::before{
@@ -37,20 +39,10 @@
     content:""; position:absolute; bottom:-160px; left:-80px; width:320px; height:320px;
     border:3px solid var(--pink); border-radius:50%; opacity:0.25;
   }
-  .eyebrow{
-    display:inline-block; font-family:'Bebas Neue',sans-serif; font-size:15px;
-    letter-spacing:0.3em; color:var(--yellow); border:1px solid var(--yellow);
-    padding:5px 14px; border-radius:999px; margin-bottom:22px; text-transform:uppercase;
-  }
   .hero h1{ font-size:clamp(52px,9vw,120px); line-height:0.92; position:relative; z-index:1;}
-  .hero h1 span{ color:var(--pink); }
   .hero .subtitle{ font-size:clamp(18px,2.4vw,26px); color:var(--teal); font-family:'Bebas Neue',sans-serif; letter-spacing:0.04em; margin-top:6px;}
-  .hero .meta-row{ margin-top:26px; display:flex; gap:28px; flex-wrap:wrap; color:var(--grey); font-size:14px;}
+  .hero .meta-row{ margin-top:26px; display:flex; gap:28px; flex-wrap:wrap; color:var(--grey); font-size:14px; font-family:Georgia,serif;}
   .hero .meta-row b{ color:var(--white); }
-  .hero .note{
-    margin-top:30px; max-width:640px; font-size:14px; color:var(--grey);
-    border-left:3px solid var(--blue); padding-left:16px;
-  }
 
   /* ---------- NAV ---------- */
   nav{
@@ -59,45 +51,53 @@
     padding:0 6vw;
   }
   nav a{
-    font-family:'Bebas Neue',sans-serif; letter-spacing:0.08em; font-size:15px;
-    color:var(--grey); text-decoration:none; padding:16px 18px; white-space:nowrap; border-bottom:3px solid transparent;
+    font-size:15px; color:var(--grey); text-decoration:none; padding:16px 18px;
+    white-space:nowrap; border-bottom:3px solid transparent;
   }
   nav a:hover{ color:var(--white); border-bottom-color:var(--teal); }
 
   section{ padding:70px 6vw; border-bottom:1px solid var(--line); }
   .section-head{ display:flex; align-items:baseline; gap:16px; margin-bottom:36px; flex-wrap:wrap;}
-  .section-head .num{ font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--pink); }
+  .section-head .num{ font-size:20px; color:var(--pink); }
   .section-head h2{ font-size:clamp(32px,5vw,54px); }
   .section-sub{ color:var(--grey); max-width:680px; margin-top:-20px; margin-bottom:36px; font-size:15px;}
 
   /* ---------- HEADLINE STRIP ---------- */
   .headline-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line);}
   .headline-card{ background:var(--panel); padding:28px 22px; }
-  .headline-card .value{ font-family:'Bebas Neue',sans-serif; font-size:56px; color:var(--yellow); line-height:1;}
-  .headline-card .label{ margin-top:8px; font-weight:700; font-size:14px;}
-  .headline-card .sub{ margin-top:4px; font-size:12px; color:var(--grey);}
+  .headline-card .value{ font-size:56px; color:var(--yellow); line-height:1;}
+  .headline-card .label{ margin-top:8px; font-weight:700; font-size:14px; font-family:Georgia,serif;}
+  .headline-card .sub{ margin-top:4px; font-size:12px; color:var(--grey); font-family:Georgia,serif;}
+
+  .headline-quotes{ margin-top:40px; display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:22px;}
 
   /* ---------- CHARTS ---------- */
   .chart-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px;}
   .chart-card{ background:var(--panel); border:1px solid var(--line); padding:26px; border-radius:4px; }
   .chart-card h3{ font-size:22px; margin-bottom:18px; color:var(--teal); }
   .bar-row{ display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:13px;}
-  .bar-label{ width:150px; flex-shrink:0; color:var(--grey);}
+  .bar-label{ width:220px; flex-shrink:0; color:var(--grey);}
   .bar-track{ flex:1; background:#1c1c1c; height:16px; border-radius:3px; overflow:hidden;}
   .bar-fill{ height:100%; background:var(--pink); }
-  .bar-val{ width:38px; text-align:right; font-weight:700; flex-shrink:0;}
+  .bar-val{ width:42px; text-align:right; font-weight:700; flex-shrink:0;}
 
   .pie-wrap{ display:flex; align-items:center; gap:22px; flex-wrap:wrap;}
   .pie-legend{ font-size:13px; }
   .pie-legend div{ display:flex; align-items:center; gap:8px; margin-bottom:6px; color:var(--grey);}
   .pie-legend .swatch{ width:11px; height:11px; border-radius:2px; flex-shrink:0;}
   .pie-legend b{ color:var(--white);}
+  .chart-note{ margin-top:14px; font-size:12px; color:#666;}
+
+  .stat-inline-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:32px;}
+  .stat-inline{ background:var(--panel); border:1px solid var(--teal); border-radius:4px; padding:18px 20px;}
+  .stat-inline .v{ font-family:'Bebas Neue',sans-serif; font-size:38px; color:var(--teal);}
+  .stat-inline .d{ font-size:13px; color:var(--grey); margin-top:4px;}
+  .stat-inline .note{ font-size:11px; color:#666; margin-top:6px;}
 
   /* ---------- QUOTES ---------- */
   .quote-tabs{ display:flex; gap:10px; margin-bottom:28px; flex-wrap:wrap;}
   .quote-tab{
-    font-family:'Bebas Neue',sans-serif; letter-spacing:0.05em; font-size:14px;
-    background:transparent; border:1px solid var(--line); color:var(--grey);
+    font-size:14px; background:transparent; border:1px solid var(--line); color:var(--grey);
     padding:9px 18px; border-radius:999px; cursor:pointer;
   }
   .quote-tab.active{ background:var(--pink); border-color:var(--pink); color:var(--white);}
@@ -106,7 +106,7 @@
     background:var(--panel); border-left:3px solid var(--pink); padding:24px; border-radius:2px;
   }
   .quote-card p{ font-size:16px; font-style:italic; margin-bottom:16px; }
-  .quote-card .attr{ font-size:13px; color:var(--teal); font-weight:700;}
+  .quote-card .attr{ font-size:13px; color:var(--teal); font-weight:700; font-family:Georgia,serif;}
   .quote-card .attr span{ color:var(--grey); font-weight:400; display:block; font-style:normal; margin-top:2px;}
   .quote-card .src{ margin-top:10px; font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:#666;}
   .hidden{ display:none !important; }
@@ -114,40 +114,35 @@
   /* ---------- SYSTEMS CHANGE ---------- */
   .org-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px;}
   .org-card{ background:var(--panel2); border:1px solid var(--line); padding:18px 20px; border-radius:4px;}
-  .org-card .org-name{ font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--yellow);}
+  .org-card .org-name{ font-size:20px; color:var(--yellow);}
   .org-card p{ font-size:13px; color:var(--grey); margin-top:8px;}
   .press-strip{ display:flex; gap:16px; flex-wrap:wrap; margin-top:30px;}
   .press-chip{ background:var(--navy); padding:10px 18px; border-radius:999px; font-size:13px;}
   .press-chip b{ font-family:'Bebas Neue',sans-serif; letter-spacing:0.03em;}
 
   /* ---------- YOUNG PEOPLE ---------- */
-  .yp-stats{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-bottom:36px;}
   .yp-stat{ background:var(--panel); border:1px solid var(--teal); border-radius:4px; padding:20px;}
-  .yp-stat .frac{ font-family:'Bebas Neue',sans-serif; font-size:40px; color:var(--teal);}
+  .yp-stat .frac{ font-size:40px; color:var(--teal);}
   .yp-stat .desc{ font-size:13px; color:var(--grey); margin-top:6px;}
+  .yp-methodology{ font-size:12px; color:#666; margin-bottom:36px; max-width:720px; border-left:2px solid var(--line); padding-left:14px;}
   .yp-card{ background:var(--panel2); border:1px solid var(--line); border-radius:4px; padding:20px; margin-bottom:14px;}
-  .yp-card .name{ font-weight:900; color:var(--pink);}
-  .yp-card .tag{ font-size:12px; color:var(--grey); margin-bottom:10px;}
-  .yp-card p{ font-size:14px; margin-bottom:8px;}
-  .yp-badges{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
-  .badge{ font-size:11px; background:#1c1c1c; padding:4px 10px; border-radius:999px; color:var(--teal);}
+  .yp-card .tag{ font-size:12px; color:var(--pink); font-weight:700; margin-bottom:10px;}
+  .yp-card p{ font-size:14px;}
   .named-list{ margin-top:26px; font-size:14px; color:var(--grey);}
   .named-list b{ color:var(--white);}
 
-  /* ---------- LINKEDIN GALLERY ---------- */
-  .li-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:22px;}
-  .li-card{ background:var(--panel2); border:1px solid var(--line); border-radius:6px; overflow:hidden;}
-  .li-card img{ width:100%; display:block; aspect-ratio:4/3; object-fit:cover; object-position:top; background:#1a1a1a;}
-  .li-body{ padding:14px 16px;}
-  .li-body .name{ font-weight:900; font-size:15px;}
-  .li-body .role{ font-size:12px; color:var(--grey); margin-top:2px;}
-  .li-body .q{ font-size:12px; font-style:italic; color:var(--teal); margin-top:8px;}
-
-  /* ---------- EVIDENCE STREAMS TABLE ---------- */
-  table{ width:100%; border-collapse:collapse; font-size:14px;}
-  th{ text-align:left; font-family:'Bebas Neue',sans-serif; letter-spacing:0.04em; font-size:14px; color:var(--yellow); padding:10px 12px; border-bottom:2px solid var(--line);}
-  td{ padding:12px; border-bottom:1px solid var(--line); vertical-align:top;}
-  tr:hover td{ background:#0f0f0f; }
+  /* ---------- LINKEDIN ---------- */
+  .li-summary{ font-size:16px; color:var(--white); max-width:760px; margin-bottom:30px;}
+  .li-feature{ margin-bottom:36px;}
+  .li-feature img{ max-width:420px; width:100%; border-radius:6px; border:1px solid var(--line); display:block;}
+  .li-feature .cap{ font-size:12px; color:var(--grey); margin-top:8px;}
+  .li-quote-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px;}
+  .li-quote-card{ background:var(--panel2); border-left:3px solid var(--teal); padding:20px; border-radius:2px;}
+  .li-quote-card p{ font-size:15px; font-style:italic; margin-bottom:12px;}
+  .li-quote-card .attr{ font-size:13px; color:var(--teal); font-weight:700;}
+  .li-quote-card .attr span{ display:block; color:var(--grey); font-weight:400; margin-top:2px;}
+  .li-quote-card.unverified{ opacity:0.75; border-left-color:#666;}
+  .li-note{ margin-top:26px; font-size:12px; color:#666; max-width:700px;}
 
   /* ---------- GAPS ---------- */
   .gaps-box{ background:#160b10; border:1px solid var(--pink); border-radius:6px; padding:30px 34px;}
@@ -158,21 +153,19 @@
 
   @media (max-width:640px){
     section{ padding:50px 5vw;}
-    .hero{ padding:60px 5vw 40px;}
+    .hero{ padding:50px 5vw 35px;}
+    .bar-label{ width:140px;}
   }
 </style>
 </head>
 <body>
 
 <header class="hero">
-  <div class="eyebrow">The Big House · Impact Evidence</div>
-  <h1>A DOL<br><span>HOUSE.</span></h1>
+  <h1>A DoL House</h1>
   <div class="subtitle">Impact &amp; Evidence Dashboard</div>
   <div class="meta-row">
     <div>📅 <b id="runDates"></b></div>
-    <div>🔄 Last updated <b id="lastUpdated"></b></div>
   </div>
-  <p class="note" id="metaNote"></p>
 </header>
 
 <nav>
@@ -180,7 +173,7 @@
   <a href="#audience">Audience &amp; Reach</a>
   <a href="#systems">Systems Change</a>
   <a href="#youngpeople">Young People</a>
-  <a href="#voices">Voices</a>
+  <a href="#keyquotes">Key Quotes</a>
   <a href="#linkedin">LinkedIn</a>
   <a href="#gaps">Data Gaps</a>
 </nav>
@@ -188,19 +181,20 @@
 <section id="headline">
   <div class="section-head"><span class="num">01</span><h2>The Show, In Numbers</h2></div>
   <div class="headline-grid" id="headlineGrid"></div>
+  <div class="headline-quotes" id="headlineQuotes"></div>
 </section>
 
 <section id="audience">
   <div class="section-head"><span class="num">02</span><h2>Audience &amp; Reach</h2></div>
-  <p class="section-sub">Who came, how they heard about it, and why. Drawn from 347 TicketSource bookings — age and sector fields weren't captured for every booking, so percentages below are of those who answered.</p>
+  <p class="section-sub">Based on 449 audience responses from the run's 917 attendees, treated as representative of the full audience.</p>
+
+  <div class="stat-inline-grid" id="audienceStats"></div>
+
   <div class="chart-grid">
     <div class="chart-card">
-      <h3>Professional field</h3>
-      <div id="pieEmployment" class="pie-wrap"></div>
-    </div>
-    <div class="chart-card">
-      <h3>Age</h3>
-      <div id="barAges"></div>
+      <h3>Occupation</h3>
+      <div id="pieOccupation" class="pie-wrap"></div>
+      <div class="chart-note" id="occupationNote"></div>
     </div>
     <div class="chart-card">
       <h3>How they heard about it</h3>
@@ -211,6 +205,8 @@
       <div id="barWhy"></div>
     </div>
   </div>
+
+  <div class="quote-grid" style="margin-top:36px;" id="audienceClosingQuotes"></div>
 </section>
 
 <section id="systems">
@@ -222,15 +218,14 @@
 
 <section id="youngpeople">
   <div class="section-head"><span class="num">04</span><h2>Impact on Young People</h2></div>
-  <p class="section-sub">From Beth's young people's survey (5 responses so far) — small numbers, so read as signal rather than statistically robust.</p>
-  <div class="yp-stats" id="ypStats"></div>
+  <div class="stat-inline-grid" id="ypStats"></div>
+  <p class="yp-methodology" id="ypMethodology"></p>
   <div id="ypCards"></div>
   <div class="named-list" id="ypNamed"></div>
 </section>
 
-<section id="voices">
-  <div class="section-head"><span class="num">05</span><h2>Voices</h2></div>
-  <p class="section-sub">The most powerful lines from professionals, audiences and young people, in their own words.</p>
+<section id="keyquotes">
+  <div class="section-head"><span class="num">05</span><h2>Key Quotes</h2></div>
   <div class="quote-tabs">
     <button class="quote-tab active" data-tab="systems">Systems change</button>
     <button class="quote-tab" data-tab="audience">General audience</button>
@@ -240,28 +235,22 @@
 </section>
 
 <section id="linkedin">
-  <div class="section-head"><span class="num">06</span><h2>LinkedIn Gallery</h2></div>
-  <p class="section-sub" id="liSub"></p>
-  <div class="li-grid" id="liGrid"></div>
-</section>
-
-<section id="streams">
-  <div class="section-head"><span class="num">07</span><h2>Evidence Streams</h2></div>
-  <table>
-    <thead><tr><th>Stream</th><th>Status</th><th>Volume so far</th></tr></thead>
-    <tbody id="streamsBody"></tbody>
-  </table>
+  <div class="section-head"><span class="num">06</span><h2>LinkedIn</h2></div>
+  <p class="li-summary" id="liSummary"></p>
+  <div class="li-feature" id="liFeature"></div>
+  <div class="li-quote-grid" id="liQuoteGrid"></div>
+  <p class="li-note" id="liNote"></p>
 </section>
 
 <section id="gaps">
-  <div class="section-head"><span class="num">08</span><h2>Data Gaps &amp; Next Steps</h2></div>
+  <div class="section-head"><span class="num">07</span><h2>Data Gaps &amp; Next Steps</h2></div>
   <div class="gaps-box">
     <p style="font-size:14px;color:#e8c9d6;">Flagged so nothing here is mistaken for a finished picture. To close before this goes to funders or partners:</p>
     <ul id="gapsList"></ul>
   </div>
 </section>
 
-<footer>The Big House · A DoL House Impact Dashboard · Built from the team's live evidence base, per the M&amp;E plan</footer>
+<footer>The Big House · A DoL House Impact Dashboard</footer>
 
 <script src="data.js"></script>
 <script>
@@ -269,38 +258,46 @@ const D = DASHBOARD_DATA;
 const PALETTE = ['#E6007E','#68E2D4','#F3D245','#42AEF0','#2050A8','#ff6f61','#9b8cff','#5ad1a8'];
 
 document.getElementById('runDates').textContent = D.meta.runDates;
-document.getElementById('lastUpdated').textContent = D.meta.lastUpdated;
-document.getElementById('metaNote').textContent = D.meta.note;
 
 // Headline
 const hg = document.getElementById('headlineGrid');
 D.headline.forEach(h=>{
   hg.innerHTML += `<div class="headline-card"><div class="value">${h.value}</div><div class="label">${h.label}</div><div class="sub">${h.sub}</div></div>`;
 });
+document.getElementById('headlineQuotes').innerHTML = D.headlineQuotes.map(q=>`
+  <div class="quote-card">
+    <p>"${q.text}"</p>
+    <div class="attr">${q.name}<span>${q.role}</span></div>
+    <div class="src">${q.source}</div>
+  </div>`).join('');
 
-// Bar chart helper
+// Audience inline stats
+const audStats = document.getElementById('audienceStats');
+audStats.innerHTML = `
+  <div class="stat-inline"><div class="v">${D.audience.underTwentyFivePct}%</div><div class="d">of attendees were young people (under 25)</div></div>
+  <div class="stat-inline"><div class="v">${D.audience.newToTBH}%</div><div class="d">were new to a TBH show</div></div>
+  <div class="stat-inline"><div class="v">${D.audience.lawyersEstimate.value}+</div><div class="d">lawyers &amp; legal professionals attended</div><div class="note">${D.audience.lawyersEstimate.note}</div></div>
+`;
+
+// Bar chart helper (values already percentages)
 function renderBars(containerId, obj, colorFn){
   const el = document.getElementById(containerId);
-  const max = Math.max(...Object.values(obj));
   let html = '';
   Object.entries(obj).sort((a,b)=>b[1]-a[1]).forEach(([k,v],i)=>{
-    const pct = (v/max*100).toFixed(0);
     html += `<div class="bar-row">
       <div class="bar-label">${k}</div>
-      <div class="bar-track"><div class="bar-fill" style="width:${pct}%; background:${colorFn(i)}"></div></div>
-      <div class="bar-val">${v}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${v}%; background:${colorFn(i)}"></div></div>
+      <div class="bar-val">${v}%</div>
     </div>`;
   });
   el.innerHTML = html;
 }
-renderBars('barAges', D.audience.ages, i=>PALETTE[i%PALETTE.length]);
 renderBars('barHeard', D.audience.heard, ()=>'var(--teal)');
 renderBars('barWhy', D.audience.why, ()=>'var(--blue)');
 
-// Pie (conic-gradient) for employment
-function renderPie(containerId, obj){
+// Pie for occupation
+function renderPie(containerId, obj, total){
   const el = document.getElementById(containerId);
-  const total = Object.values(obj).reduce((a,b)=>a+b,0);
   let acc = 0;
   let gradient = [];
   let legend = '';
@@ -310,15 +307,23 @@ function renderPie(containerId, obj){
     const end = acc/total*360;
     const color = PALETTE[i%PALETTE.length];
     gradient.push(`${color} ${start}deg ${end}deg`);
-    const pct = (v/total*100).toFixed(0);
-    legend += `<div><span class="swatch" style="background:${color}"></span><b>${k}</b>&nbsp;— ${v} (${pct}%)</div>`;
+    const pct = Math.round(v/total*100);
+    legend += `<div><span class="swatch" style="background:${color}"></span><b>${k}</b>&nbsp;— ${pct}%</div>`;
   });
   el.innerHTML = `
     <div style="width:150px;height:150px;border-radius:50%;background:conic-gradient(${gradient.join(',')}); flex-shrink:0;"></div>
-    <div class="pie-legend">${legend}<div style="margin-top:8px;color:#666;">of ${D.audience.employmentResponded} who gave a field</div></div>
+    <div class="pie-legend">${legend}</div>
   `;
 }
-renderPie('pieEmployment', D.audience.employment);
+renderPie('pieOccupation', D.audience.occupation, D.audience.occupationResponded);
+document.getElementById('occupationNote').textContent = D.audience.occupationNote;
+
+// Audience closing quotes
+document.getElementById('audienceClosingQuotes').innerHTML = D.audienceClosingQuotes.map(q=>`
+  <div class="quote-card">
+    <p>"${q.text}"</p>
+    <div class="attr"><span>${q.role}</span></div>
+  </div>`).join('');
 
 // Systems change orgs
 const orgGrid = document.getElementById('orgGrid');
@@ -335,16 +340,15 @@ const ypStats = document.getElementById('ypStats');
 D.youngPeople.stats.forEach(s=>{
   ypStats.innerHTML += `<div class="yp-stat"><div class="frac">${s.value}</div><div class="desc">${s.metric}</div></div>`;
 });
+document.getElementById('ypMethodology').textContent = D.youngPeople.methodologyNote;
 const ypCards = document.getElementById('ypCards');
 D.youngPeople.responses.forEach(r=>{
   ypCards.innerHTML += `<div class="yp-card">
-    <div class="name">${r.name}</div>
     <div class="tag">${r.tag}</div>
     <p>"${r.stood_out}"</p>
-    <div class="yp-badges"><span class="badge">Understood rights: ${r.rights}</span><span class="badge">Confidence to speak up: ${r.confidence}</span></div>
   </div>`;
 });
-document.getElementById('ypNamed').innerHTML = `<b>${D.youngPeople.additionalNamedAttendees} further TBH members</b> logged as attending across performances: ${D.youngPeople.namedMembers.join(', ')}.`;
+document.getElementById('ypNamed').innerHTML = `<b>${D.youngPeople.totalVoicesHeard} young people's voices</b> are reflected across this section — ${D.youngPeople.surveyCount} from the structured post-show survey, ${D.youngPeople.transcriptCount} from show transcripts, plus a further ${D.youngPeople.additionalNamedAttendeesCount} TBH members logged as attending across performances.`;
 
 // Quotes tabs
 const quoteGrid = document.getElementById('quoteGrid');
@@ -352,7 +356,7 @@ function renderQuotes(tab){
   quoteGrid.innerHTML = D.quotes[tab].map(q=>`
     <div class="quote-card">
       <p>"${q.text}"</p>
-      <div class="attr">${q.name}<span>${q.role}</span></div>
+      <div class="attr">${q.name ? q.name : ''}<span>${q.role}</span></div>
       <div class="src">${q.source}</div>
     </div>`).join('');
 }
@@ -365,25 +369,18 @@ document.querySelectorAll('.quote-tab').forEach(btn=>{
   });
 });
 
-// LinkedIn gallery
-document.getElementById('liSub').textContent = `${D.linkedin.totalPosts} posts identified across LinkedIn, ${D.linkedin.screenshotsSaved} saved as screenshots below.`;
-const liGrid = document.getElementById('liGrid');
-D.linkedin.posts.forEach(p=>{
-  liGrid.innerHTML += `<div class="li-card">
-    <img src="${p.image}" alt="${p.name} LinkedIn post" loading="lazy">
-    <div class="li-body">
-      <div class="name">${p.name}</div>
-      <div class="role">${p.role}${p.org ? ' · '+p.org : ''}</div>
-      ${p.quote ? `<div class="q">"${p.quote}"</div>` : ''}
-    </div>
-  </div>`;
-});
-
-// Evidence streams
-const streamsBody = document.getElementById('streamsBody');
-D.evidenceStreams.forEach(s=>{
-  streamsBody.innerHTML += `<tr><td><b>${s.stream}</b></td><td>${s.status}</td><td>${s.volume}</td></tr>`;
-});
+// LinkedIn
+document.getElementById('liSummary').textContent = D.linkedin.summary;
+document.getElementById('liFeature').innerHTML = `
+  <img src="${D.linkedin.featuredImage.src}" alt="${D.linkedin.featuredImage.caption}">
+  <div class="cap">${D.linkedin.featuredImage.caption}</div>
+`;
+document.getElementById('liQuoteGrid').innerHTML = D.linkedin.quotes.map(q=>`
+  <div class="li-quote-card ${q.verified ? '' : 'unverified'}">
+    <p>"${q.text}"</p>
+    <div class="attr">${q.name}<span>${q.role}</span></div>
+  </div>`).join('');
+document.getElementById('liNote').textContent = D.linkedin.note;
 
 // Gaps
 const gapsList = document.getElementById('gapsList');
